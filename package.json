@@ -1,17 +1,19 @@
 {
-  "name": "REPLACEME",
+  "name": "mixpanel-debug",
   "version": "1.0.0",
-  "description": "",
+  "description": "a browser extension to debug mixpanel web tracking",
   "main": "background.js",
   "scripts": {
     "format": "prettier --write .",
     "build": "node scripts/build.js",
+	"dev": "node --watch-path=./src scripts/build.js",
     "build:prod": "node scripts/prod-build.js",
     "build:chrome": "node scripts/package-extension.js",
     "build:firefox": "node scripts/firefox-build.js"
+	
   },
   "keywords": [],
-  "author": "REPLACEME",
+  "author": "AK",
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.0",
