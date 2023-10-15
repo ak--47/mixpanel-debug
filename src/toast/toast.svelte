@@ -19,7 +19,7 @@
 
 {#if visible}
   <div>
-    {message}
+    {message} yo
   </div>
 {/if}
 
@@ -30,7 +30,7 @@
     left: 50%;
     transform: translateX(-50%);
     background-color: black;
-    color: white;
+    color: red;
     padding: 10px 20px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);

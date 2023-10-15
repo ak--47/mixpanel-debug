@@ -2,8 +2,6 @@ import browser from 'webextension-polyfill';
 import { type BrowserMessageType, type ColorScheme } from './models';
 console.log('CONTENT SCRIPT RAN');
 
-injectCSS(browser.runtime.getURL('/dist/toast.css'));
-
 injectScript(browser.runtime.getURL('/dist/toast.js')).then(() => {
   console.log('TOAST JS INJECTED');
 });
@@ -15,22 +13,11 @@ window.addEventListener('MIXPANEL_TOAST_READY', () => {
 browser.runtime.onMessage.addListener(message => {
   console.log('GOT REQ FROM WORKER', message);
 
-  // Instantiate the Svelte component
-  toast();
+
   
 });
 
-function toast(message = 'mixpanel event!', duration = 3000) {
-  new window.MIXPANEL_DEBUG_TOAST({
-    target: document.body,
-    props: {
-      message: message,
-      duration: duration
-    }
-  });
-}
-
-function injectScript(file_path) {
+function injectScript(file_path: string) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = file_path;
@@ -40,7 +27,7 @@ function injectScript(file_path) {
   });
 }
 
-function injectCSS(file_path) {
+function injectCSS(file_path:string) {
   const link = document.createElement('link');
   link.href = file_path;
   link.type = 'text/css';
@@ -49,7 +36,7 @@ function injectCSS(file_path) {
 }
 
 // TURN ALL THIS JAZZ INTO A SVELTE COMPONENT
-function showToast(message, duration = 3000) {
+function showToast(message: string, duration = 3000) {
   let toast = createToast(message);
   document.body.appendChild(toast);
 
@@ -61,7 +48,7 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-function createToast(message) {
+function createToast(message: string) {
   let toast = document.createElement('div');
   toast.id = 'my-extension-toast';
   toast.textContent = message;

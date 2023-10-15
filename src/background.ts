@@ -21,8 +21,9 @@ browser.webRequest.onCompleted.addListener(handleCaughtResponse, { urls });
 
 function handleCaughtRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   const data = parseRequest(details);
+  const {tabId } = details;
   storeRequest(data);
-  browser.tabs.sendMessage(data.tabId, data);
+  browser.tabs.sendMessage(tabId, data);
   console.log('caught REQ', data.url);
 }
 
@@ -30,6 +31,8 @@ function handleCaughtResponse(details: WebRequest.OnCompletedDetailsType) {
   // Access the URL and request body
   console.log('caught RESP', details.url, details.statusCode);
 }
+
+
 
 function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   const {
@@ -80,4 +83,6 @@ function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   };
 }
 
-function storeRequest(data) {}
+function storeRequest(data) {
+	
+}

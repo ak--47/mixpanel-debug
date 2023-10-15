@@ -29,7 +29,7 @@
 
   "web_accessible_resources": [
     {
-      "resources": ["/dist/toast.css", "/dist/toast.js"],
+      "resources": ["/dist/toast.js"],
 	  "matches": ["<all_urls>"]
     }
   ],
