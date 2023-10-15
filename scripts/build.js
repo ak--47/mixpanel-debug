@@ -42,6 +42,20 @@ async function main() {
     ]
   });
 
+  const toastJob = build({
+    ...commonConfig,
+    entryPoints: ['./src/toast/toast.ts'],
+    outbase: './src/toast',
+    outdir: './dist',
+    mainFields: ['svelte', 'module', 'main', 'browser'],
+    plugins: [
+      sveltePlugin({
+        preprocess: sveltePreprocess()
+      })
+    ]
+  });
+
+
   const settingsJob = build({
     ...commonConfig,
     entryPoints: ['./src/settings/settings.ts'],
@@ -55,7 +69,7 @@ async function main() {
     ]
   });
 
-  return Promise.all([contentJob, backgroundJob, popupJob, settingsJob]).then(
+  return Promise.all([contentJob, backgroundJob, popupJob, settingsJob, toastJob]).then(
     () => console.log('⚡ Compiled')
   );
 }

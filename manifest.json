@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "default_locale": "en",
 
-  "name": "__MSG_extension_name__",
-  "description": "__MSG_extension_description__",
+  "name": "mixpanel-debug",
+  "description": "a browser extension to debug mixpanel web tracking",
   "version": "1.0.0",
 
   "icons": {
@@ -23,7 +23,14 @@
   "content_scripts": [
     {
       "js": ["dist/content.js"],
-      "matches": ["*://example.com/*"]
+      "matches": ["http://*/*", "https://*/*"]
+    }
+  ],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["/dist/toast.css", "/dist/toast.js"],
+	  "matches": ["<all_urls>"]
     }
   ],
 

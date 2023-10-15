@@ -2,62 +2,82 @@ import browser, { type WebRequest } from 'webextension-polyfill';
 import { detect } from 'detect-browser';
 import type { BrowserMessage, BrowserMessageType, ColorScheme } from './models';
 import settingsConnector from './settings-connector';
+const urls = ['*://*/*track*', '*://*/*engage*'];
 
 console.log('background script running...');
 
+// listen for messages from the popup
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   console.log('got message', message);
-  switch (message.type as BrowserMessageType) {
-    case 'gotColorScheme': {
-      updateIcon(message.value as ColorScheme).then(sendResponse);
-      return true;
-    }
-  }
 });
 
-async function updateIcon(colorScheme: ColorScheme) {
-  console.log('updating icon', colorScheme);
-  // do work here
-}
+// capture requests to mixpanel
+browser.webRequest.onBeforeRequest.addListener(handleCaughtRequest, { urls }, [
+  'requestBody'
+]);
 
-browser.webRequest.onBeforeRequest.addListener(
-  handleCaughtRequest,
-  { urls: ['*://*/*track*', '*://*/*engage*'] },
-  ['requestBody']
-);
+// capture responses from mixpanel
+browser.webRequest.onCompleted.addListener(handleCaughtResponse, { urls });
 
 function handleCaughtRequest(details: WebRequest.OnBeforeRequestDetailsType) {
-  // Access the URL and request body
-  const url = details.url;
-  storeRequest(details);
-  console.log('Request URL:', url);
-
-  if (details.requestBody && details.requestBody.raw) {
-    console.log('Request Body:', details.requestBody);
-  }
+  const data = parseRequest(details);
+  storeRequest(data);
+  browser.tabs.sendMessage(data.tabId, data);
+  console.log('caught REQ', data.url);
 }
 
-// To capture the server response:
-browser.webRequest.onCompleted.addListener(
-  details => {
-    console.log('Response for:', details.url);
-    console.log('Status:', details.statusCode);
-    // Note: This doesn't capture the response body. Capturing response body is trickier and requires additional handling.
-  },
-  { urls: ['*://*/*track*'] }
-);
+function handleCaughtResponse(details: WebRequest.OnCompletedDetailsType) {
+  // Access the URL and request body
+  console.log('caught RESP', details.url, details.statusCode);
+}
 
-function storeRequest(details: WebRequest.OnBeforeRequestDetailsType) {
-  const { url, requestBody, initiator, incognito, timeStamp, type } = details;
+function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
+  const {
+    url,
+    requestBody,
+    initiator,
+    incognito,
+    timeStamp,
+    type,
+    tabId,
+    originUrl
+  } = details;
+
   let records = [];
+
   if (requestBody?.formData) {
     try {
       records = JSON.parse(requestBody.formData.data);
+      console.log('caught', records);
+    } catch (e) {
+      console.log('error parsing json', e);
+    }
+  } else if (requestBody?.raw) {
+    try {
+      records = JSON.parse(requestBody.raw[0].bytes);
+      console.log('caught', records);
     } catch (e) {
       console.log('error parsing json', e);
     }
   }
 
-  console.log(records);
+  let endpoint;
+  if (url.includes('track')) endpoint = '/track';
+  else if (url.includes('engage')) endpoint = '/engage';
+  else endpoint = '/unknown';
 
+  return {
+    url,
+    requestBody,
+    initiator,
+    incognito,
+    timeStamp,
+    type,
+    tabId,
+    originUrl,
+    records,
+    endpoint
+  };
 }
+
+function storeRequest(data) {}
