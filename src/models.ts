@@ -14,3 +14,15 @@ export const DEFAULT_SETTINGS: AppSettings = {
 };
 
 export type ColorScheme = 'light' | 'dark';
+
+export type ParsedRequest = {
+  url: string;
+  initiator: string | undefined;
+  incognito: boolean | undefined;
+  timeStamp: number;
+  type: string;
+  tabId: number;
+  originUrl: string | undefined;
+  endpoint: '/track' | '/engage' | '/unknown';
+  records: any[];
+};

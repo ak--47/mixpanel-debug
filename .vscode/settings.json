@@ -3,6 +3,7 @@
 		"outbase",
 		"outdir",
 		"outfile",
-		"webextension"
+		"webextension",
+		"zerodevx"
 	]
 }

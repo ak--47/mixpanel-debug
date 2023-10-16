@@ -1,6 +1,6 @@
 import browser, { type WebRequest } from 'webextension-polyfill';
 import { detect } from 'detect-browser';
-import type { BrowserMessage, BrowserMessageType, ColorScheme } from './models';
+import type { ParsedRequest } from './models';
 import settingsConnector from './settings-connector';
 const urls = ['*://*/*track*', '*://*/*engage*'];
 
@@ -21,7 +21,7 @@ browser.webRequest.onCompleted.addListener(handleCaughtResponse, { urls });
 
 function handleCaughtRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   const data = parseRequest(details);
-  const {tabId } = details;
+  const { tabId } = details;
   storeRequest(data);
   browser.tabs.sendMessage(tabId, data);
   console.log('caught REQ', data.url);
@@ -32,9 +32,9 @@ function handleCaughtResponse(details: WebRequest.OnCompletedDetailsType) {
   console.log('caught RESP', details.url, details.statusCode);
 }
 
-
-
-function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
+function parseRequest(
+  details: WebRequest.OnBeforeRequestDetailsType
+): ParsedRequest {
   const {
     url,
     requestBody,
@@ -50,10 +50,18 @@ function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
 
   if (requestBody?.formData) {
     try {
+      //new SDK sends data w/simple stringify
       records = JSON.parse(requestBody.formData.data);
       console.log('caught', records);
     } catch (e) {
-      console.log('error parsing json', e);
+      //old SDK does base64 encoding
+      try {		
+		// @ts-ignore
+        records = JSON.parse(atob(requestBody.formData.data.join('')));
+      } catch (e) {
+        //we're screwed!
+        console.log('error parsing json', e);
+      }
     }
   } else if (requestBody?.raw) {
     try {
@@ -64,14 +72,13 @@ function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
     }
   }
 
-  let endpoint;
+  let endpoint: '/track' | '/engage' | '/unknown';
   if (url.includes('track')) endpoint = '/track';
   else if (url.includes('engage')) endpoint = '/engage';
   else endpoint = '/unknown';
 
   return {
     url,
-    requestBody,
     initiator,
     incognito,
     timeStamp,
@@ -83,6 +90,4 @@ function parseRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   };
 }
 
-function storeRequest(data) {
-	
-}
+function storeRequest(data) {}

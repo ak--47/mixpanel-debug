@@ -26,13 +26,7 @@
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
-
-  "web_accessible_resources": [
-    {
-      "resources": ["/dist/toast.js"],
-	  "matches": ["<all_urls>"]
-    }
-  ],
+  
 
   "action": {
     "default_popup": "public/popup.html",
@@ -49,11 +43,5 @@
   "options_ui": {
     "page": "public/settings.html",
     "open_in_tab": true
-  },
-
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "mixpanel-debug"
-    }
   }
 }
