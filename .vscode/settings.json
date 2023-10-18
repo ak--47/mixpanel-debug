@@ -1,9 +1,11 @@
 {
-	"cSpell.words": [
-		"outbase",
-		"outdir",
-		"outfile",
-		"webextension",
-		"zerodevx"
-	]
+  "cSpell.words": [
+    "outbase",
+    "outdir",
+    "outfile",
+    "Toastify",
+    "webextension",
+    "zerodevx"
+],
+"editor.defaultFormatter": "esbenp.prettier-vscode"
 }

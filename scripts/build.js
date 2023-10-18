@@ -1,6 +1,8 @@
 const { build } = require('esbuild');
 const sveltePlugin = require('esbuild-svelte');
 const sveltePreprocess = require('svelte-preprocess');
+const fs = require('fs');
+const path = require('path');
 
 
 
@@ -21,9 +23,12 @@ async function main() {
 	};
 	const contentJob = build({
 		...commonConfig,
-		entryPoints: ['./src/content.ts'],
-		outfile: './dist/content.js'
+		entryPoints: ['./src/toast.ts'],
+		outfile: './dist/toast.js'
 	});
+
+	// fs.copyFileSync(path.resolve('./src/toast.css'), path.resolve('./dist/toast.css'));
+	// fs.copyFileSync(path.resolve('./public/apercu-regular-pro.woff2'), path.resolve('./dist/apercu-regular-pro.woff2'));
 
 	const backgroundJob = build({
 		...commonConfig,

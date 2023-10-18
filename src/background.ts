@@ -2,6 +2,8 @@ import browser, { type WebRequest } from 'webextension-polyfill';
 import { detect } from 'detect-browser';
 import type { ParsedRequest } from './models';
 import settingsConnector from './settings-connector';
+
+import { getFromStorage, setToStorage } from './utils.js';
 const urls = ['*://*/*track*', '*://*/*engage*'];
 
 console.log('background script running...');
@@ -17,12 +19,20 @@ browser.webRequest.onBeforeRequest.addListener(handleCaughtRequest, { urls }, [
 ]);
 
 // capture responses from mixpanel
-browser.webRequest.onCompleted.addListener(handleCaughtResponse, { urls });
+browser.webRequest.onCompleted.addListener(handleCaughtResponse, { urls }, [
+  'extraHeaders',
+  'responseHeaders'
+]);
 
 function handleCaughtRequest(details: WebRequest.OnBeforeRequestDetailsType) {
   const data = parseRequest(details);
+  if (!data) return;
   const { tabId } = details;
-  storeRequest(data);
+  storeRequests(data)
+    .then(() => {})
+    .catch(e => {
+      console.log('error storing requests', e);
+    });
   browser.tabs.sendMessage(tabId, data);
   console.log('caught REQ', data.url);
 }
@@ -34,7 +44,7 @@ function handleCaughtResponse(details: WebRequest.OnCompletedDetailsType) {
 
 function parseRequest(
   details: WebRequest.OnBeforeRequestDetailsType
-): ParsedRequest {
+): ParsedRequest | null {
   const {
     url,
     requestBody,
@@ -55,8 +65,8 @@ function parseRequest(
       console.log('caught', records);
     } catch (e) {
       //old SDK does base64 encoding
-      try {		
-		// @ts-ignore
+      try {
+        // @ts-ignore
         records = JSON.parse(atob(requestBody.formData.data.join('')));
       } catch (e) {
         //we're screwed!
@@ -69,7 +79,11 @@ function parseRequest(
       console.log('caught', records);
     } catch (e) {
       console.log('error parsing json', e);
+      return null;
     }
+  } else {
+    console.log('no request body');
+    return null;
   }
 
   let endpoint: '/track' | '/engage' | '/unknown';
@@ -90,4 +104,22 @@ function parseRequest(
   };
 }
 
-function storeRequest(data) {}
+async function storeRequests(data: ParsedRequest) {
+  const { initiator, timeStamp, records = [], endpoint } = data;
+  for (const record of records) {
+    let token;
+    if (endpoint === '/track') token = record.properties.token;
+    else if (endpoint === '/engage') token = record.$token;
+    else token = 'unknown';
+    const STORED = await getFromStorage(token);
+
+    STORED.unshift({
+      initiator,
+      timeStamp,
+      endpoint,
+      data: record
+    });
+
+    await setToStorage(token, STORED);
+  }
+}
