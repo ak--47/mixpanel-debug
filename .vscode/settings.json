@@ -6,6 +6,6 @@
     "Toastify",
     "webextension",
     "zerodevx"
-],
-"editor.defaultFormatter": "esbenp.prettier-vscode"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

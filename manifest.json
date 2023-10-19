@@ -30,15 +30,13 @@
         "public/node_modules.min.js",
         "public/bundle.min.css",
         "public/mixpanel.css",
-		"public/injectToasts.js",
+        "public/injectToasts.js",
         "public/apercu-regular-pro.woff2"
       ],
       "matches": ["http://*/*", "https://*/*"]
     }
   ],
-  "content_security_policy": {
-    
-  },
+  "content_security_policy": {},
   "action": {
     "default_popup": "public/popup.html",
     "default_icon": {
