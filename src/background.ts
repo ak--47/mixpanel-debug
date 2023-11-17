@@ -1,5 +1,4 @@
 import browser, { type WebRequest } from 'webextension-polyfill';
-import { detect } from 'detect-browser';
 import type { ParsedRequest } from './models';
 import settingsConnector from './settings-connector';
 

@@ -3,6 +3,7 @@ const sveltePlugin = require('esbuild-svelte');
 const sveltePreprocess = require('svelte-preprocess');
 const fs = require('fs');
 const path = require('path');
+let number = 0;
 
 
 
@@ -65,7 +66,8 @@ async function main() {
 
 	return Promise.all([contentJob, backgroundJob, popupJob, settingsJob]).then(
 		() => {
-			console.log('⚡ Compiled');
+			number++;
+			console.log(`⚡ Compiled: ${number}`);
 		});
 }
 

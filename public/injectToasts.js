@@ -12,12 +12,12 @@ document.addEventListener("showToastEvent", function (e) {
 			hide: false,
 			type: "success",
 			
-			timeout: 3000,
+			timeout: 5000,
 			closeToastCallback: () => {
-				// make sure toasts don't stay mounted to the DOM
-				setTimeout(() => {
-					toastArea.clearAllToasts();
-				}, 5000);
+				// // make sure toasts don't stay mounted to the DOM
+				// setTimeout(() => {
+				// 	toastArea.clearAllToasts();
+				// }, 5000);
 			},
 			ctaCallback: () => {
 				// this is not displaying correctly

@@ -1,12 +1,11 @@
 import browser from "webextension-polyfill";
 import { type ParsedRequest } from "./models";
-import Toastify from "toastify-js";
 import { prettyJson } from "./utils";
 
 console.log("CONTENT SCRIPT RAN");
 let shadowCache: ShadowRoot | null = null;
 
-const profileOperations = ["$set", "$set_once", "$unset", "$append", "$remove", "$union", "$delete"];
+const profileOperations = ["$set", "$set_once", "$unset", "$append", "$remove", "$union", "$delete", "$add"];
 
 createToastWithShadowDOM();
 
@@ -74,6 +73,7 @@ function triggerShowToastInPage(message = "foo", record?: Object, type?: string)
 	document.dispatchEvent(event);
 }
 
+
 // essentially bundling our entire design system...
 function injectAssets(shadowDom: ShadowRoot, callback: Function) {
 	let scriptsToLoad = 4;
@@ -87,6 +87,7 @@ function injectAssets(shadowDom: ShadowRoot, callback: Function) {
 		link.href = browser.runtime.getURL(file);
 		shadowDom.appendChild(link);
 	});
+
 
 	// JS assets
 	const jsFiles = [

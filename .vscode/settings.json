@@ -1,11 +1,19 @@
 {
-  "cSpell.words": [
-    "outbase",
-    "outdir",
-    "outfile",
-    "Toastify",
-    "webextension",
-    "zerodevx"
-  ],
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+	"cSpell.words": [
+		"outbase",
+		"outdir",
+		"outfile",
+		"Toastify",
+		"webextension",
+		"zerodevx"
+	],
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"tailwindCSS.includeLanguages": {
+		"html": "html",
+		"javascript": "javascript",
+		"css": "css"
+	},
+	"editor.quickSuggestions": {
+		"strings": true
+	}
 }

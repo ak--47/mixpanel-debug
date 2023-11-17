@@ -3,16 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="../dist/popup.js"></script>
-    <link rel="stylesheet" href="../dist/popup.css" />
+	<!-- FONTS -->
+	<style>
+		@font-face { font-family: Apercu Pro; src: url('../public/apercu-regular-pro.woff2'); } 
+	</style>
+
+	<!-- STYLES -->
+	<link rel="stylesheet" href="../dist/popup.css" />
+	<link rel="stylesheet" href="../public/bundle.min.css">
+	<link rel="stylesheet" href="../public/mixpanel.css">			
+	
+	<!-- MIXPANEL DESIGN SYSTEM -->    
+    <script src="../public/node_modules.min.js"></script>	
+	<script src="../public/runtime.min.js"></script>
+	<script src="../public/iron.min.js"></script>
+
+	<!-- TAILWIND -->
+	<script src="../public/tailwind.min.js"></script>
+
+	<!-- MY APP -->
+	<script type="module" src="../dist/popup.js"></script>
+	
+	
   </head>
   <body>
     <main id="root"></main>
   </body>
   <style>
-    html {
-		width: 500px;
-		height: 600px;
+    body {
+		width: 500px !important;
+		height: 700px !important;
+		min-width: 500px !important;
+		min-height: 700px !important;
+		max-width: 500px !important;
+		max-height: 700px !important;
     }
   </style>
 </html>
