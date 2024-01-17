@@ -18,6 +18,8 @@ export async function getFromStorage(key) {
     return [];
   }
 }
+
+
 export async function setToStorage(key, value) {
   try {
     await browser.storage.local.set({ [key]: value });

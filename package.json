@@ -9,7 +9,9 @@
     "dev": "node --watch-path=./src scripts/build.js",
     "build:prod": "node scripts/prod-build.js",
     "build:chrome": "node scripts/package-extension.js",
-    "build:firefox": "node scripts/firefox-build.js"
+    "build:firefox": "node scripts/firefox-build.js",
+	"prune": "rm -rf ./dist/* && rm -rf ./upload/*",
+	"serve": "npx serve test"
   },
   "keywords": [],
   "author": "AK",

@@ -2,12 +2,13 @@ const fs = require('fs-extra');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const zipper = require('zip-local');
+const version = require('../manifest.json').version;
 
 main();
 
 async function main() {
   await exec('npm run build:prod');
-  const packageDir = 'packaged-extension';
+  const packageDir = `mixpanel-debug-${version}`;
   if (fs.existsSync(packageDir)) {
     await fs.rm(packageDir, { recursive: true });
   }
@@ -20,7 +21,7 @@ async function main() {
   zipper.sync
     .zip(packageDir)
     .compress()
-    .save(packageDir + '.zip');
+    .save('./upload/' + packageDir + '.zip');
 
   await fs.rm(packageDir, { recursive: true });
   console.log('Extension packaged');
